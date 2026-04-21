@@ -13,7 +13,7 @@ Calibrating the Alarm: Why Deep Learning ICS Anomaly Detectors Fail at Deploymen
 
 This table checks whether the Section 6 trend survives at native 1s sampling. The ranking is unchanged across both sampling intervals, with `operator_feedback` best and `self_filtered` better than `static`. Absolute values shift, but the deployment conclusion is stable.
 
-## Lambda Sensitivity
+## Lambda Sensitivity for self-filtered method
 
 | Lambda | FPR | Recall | F1 |
 |---:|---:|---:|---:|
