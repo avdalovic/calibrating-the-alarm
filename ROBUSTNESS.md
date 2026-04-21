@@ -35,6 +35,18 @@ This section will extend the window-size analysis beyond the main setting. It wi
 
 ## Degraded Feedback
 
+This section is a robustness extension of the paper setup in Section 6.2 for `operator_feedback` ACI. It uses the same calibration operator and updates, then relaxes the idealized operator assumption by injecting feedback errors and longer delays.
+
+Parameters matched to Section 6.2:
+- target false alarm rate `alpha = 0.01`
+- buffer size `W = 3600` observations
+- ACI step size `gamma = 0.01`
+- score stream `score_pred` (L2) on the SWaT GRU run artifacts
+
+Robustness axes varied here:
+- feedback delay `d` in `{60, 180, 600}` steps
+- feedback label flip probability `misclassify_rate` in `{0.0, 0.1, 0.2, 0.5}`
+
 Static reference is `FPR = 0.7406`, `F1 = 0.2514`.
 
 | Misclassify Rate | Delay 60 (FPR/F1) | Delay 180 (FPR/F1) | Delay 600 (FPR/F1) |
