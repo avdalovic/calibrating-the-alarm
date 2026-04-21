@@ -23,3 +23,9 @@ calibrating-the-alarm/
 
 ## Main artifact
 See `ROBUSTNESS.md` for compact robustness tables and short interpretation notes.
+
+## Current populated robustness results
+1. `results/sampling_rate/`
+2. `results/lambda_sensitivity/`
+
+The lambda sweep confirms smooth FPR control and a best observed F1 at `lambda = 0.02`, while the paper default remains `lambda = 0.01` as a conservative pre-fixed setting.
