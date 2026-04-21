@@ -16,6 +16,6 @@
 | 0.1000 | 0.0481 | 0.4310 | 0.4785 |
 
 Artifacts:
-- `/home/reasearchstudent/Desktop/CopreShield/copreshield-ics/results/lambda_sensitivity/lambda_sensitivity.csv`
-- `/home/reasearchstudent/Desktop/CopreShield/copreshield-ics/results/lambda_sensitivity/lambda_sensitivity.json`
-- `/home/reasearchstudent/Desktop/CopreShield/copreshield-ics/results/lambda_sensitivity/metadata.json`
+- `results/lambda_sensitivity/lambda_sensitivity.csv`
+- `results/lambda_sensitivity/lambda_sensitivity.json`
+- `results/lambda_sensitivity/metadata.json`

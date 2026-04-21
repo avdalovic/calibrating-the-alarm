@@ -13,11 +13,11 @@
     "dataset_name": "swat",
     "model_architecture": "gru",
     "model_name": "direct_trajectory_predictor",
-    "resolved_config": "/home/reasearchstudent/Desktop/CopreShield/copreshield-ics/runs/20260324-164045__swat_gru_h1_l2_static__phase3_static/resolved_config.yaml",
-    "run_dir": "/home/reasearchstudent/Desktop/CopreShield/copreshield-ics/runs/20260324-164045__swat_gru_h1_l2_static__phase3_static"
+    "resolved_config": "runs/20260324-164045__swat_gru_h1_l2_static__phase3_static/resolved_config.yaml",
+    "run_dir": "runs/20260324-164045__swat_gru_h1_l2_static__phase3_static"
   },
   "score_key": "score_pred",
-  "test_npz": "/home/reasearchstudent/Desktop/CopreShield/copreshield-ics/runs/20260324-164045__swat_gru_h1_l2_static__phase3_static/paper_baseline_test_residuals.npz",
-  "val_npz": "/home/reasearchstudent/Desktop/CopreShield/copreshield-ics/runs/20260324-164045__swat_gru_h1_l2_static__phase3_static/direct_trajectory_predictor_val_residuals.npz",
+  "test_npz": "runs/20260324-164045__swat_gru_h1_l2_static__phase3_static/paper_baseline_test_residuals.npz",
+  "val_npz": "runs/20260324-164045__swat_gru_h1_l2_static__phase3_static/direct_trajectory_predictor_val_residuals.npz",
   "window": 3600
 }
