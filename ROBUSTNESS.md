@@ -56,4 +56,4 @@ Static reference is `FPR = 0.7406`, `F1 = 0.2514`.
 | 20.0% | 0.0205 / 0.4719 | 0.0195 / 0.4773 | 0.0220 / 0.4298 |
 | 50.0% | 0.0310 / 0.4013 | 0.0221 / 0.4209 | 0.0228 / 0.3843 |
 
-FPR is stable across the entire grid, staying between `0.019` and `0.031` even when half of operator feedback labels are incorrect. F1 degrades gracefully with misclassification rate and is less sensitive to delay than to feedback quality. This converts the idealized-operator limitation into a quantified boundary, and even at 20% misclassification the method remains above static with `F1 = 0.47` versus `0.25`.
+FPR is stable across the entire grid, staying between `0.019` and `0.031` even when half of operator feedback labels are incorrect. F1 degrades gracefully with misclassification rate and is less sensitive to delay than to feedback quality. This converts the idealized-operator limitation into a quantified boundary, and even at 20% misclassification the method remains above static with `F1 = 0.47` versus `0.25` in low FPR regime.
