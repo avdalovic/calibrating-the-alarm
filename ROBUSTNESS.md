@@ -1,6 +1,30 @@
-Calibrating the Alarm: Why Deep Learning ICS Anomaly Detectors Fail at Deployment. These robustness experiments supplement Section 6.
+# Robustness Supplement (Section 6 Extension)
+
+This document reports supplementary robustness evaluations for **"Calibrating the Alarm"**.
+
+## What This Supplement Tests
+Primary question:
+Does the deployment conclusion from Section 6 remain valid when we perturb practical choices around sampling, calibration hyperparameters, model depth, and operator-feedback quality?
+
+Primary answer:
+Yes. Across these sweeps, adaptive calibration remains substantially more deployment-usable than static calibration in low-FPR operation.
+
+## Shared Evaluation Context
+Unless explicitly stated otherwise:
+- Testbed context: SWaT setting used in the paper's main deployment analysis.
+- Upstream detector: fixed pretrained GRU artifact (no retraining in these sweeps).
+- Score stream: `score_pred` (L2 residual aggregate).
+- Primary deployment metric: false positive rate (FPR) on benign test periods.
+- Adaptive targets: `alpha = 0.01`, buffer `W = 3600`.
+
+Scientific limits:
+- Results are point estimates from fixed split/run artifacts.
+- This supplement does not report multi-seed uncertainty intervals.
+- Interpretation is constrained to robustness trends, not universal guarantees.
 
 ## Sampling Rate Robustness
+Question:
+Does the method ordering persist at native 1-second sampling?
 
 | Sampling | Calibration | FPR | F1 |
 |---|---|---:|---:|
@@ -11,9 +35,16 @@ Calibrating the Alarm: Why Deep Learning ICS Anomaly Detectors Fail at Deploymen
 | 1s | self_filtered | 0.1462 | 0.3640 |
 | 1s | operator_feedback | 0.0519 | 0.6688 |
 
-This table checks whether the Section 6 trend survives at native 1s sampling. The ranking is unchanged across both sampling intervals, with `operator_feedback` best and `self_filtered` better than `static`. Absolute values shift, but the deployment conclusion is stable.
+Interpretation:
+The ranking is unchanged across sampling intervals: `operator_feedback` remains best, `self_filtered` remains second, and `static` remains worst on FPR/F1 tradeoff.
 
-## Lambda Sensitivity for self-filtered method
+Raw files:
+- `results/sampling_rate/ablation_sampling_rate_fpr_f1.csv`
+- `results/sampling_rate/ablation_sampling_rate_fpr_f1_table.md`
+
+## Lambda Sensitivity (Self-Filtered Calibration)
+Question:
+How sensitive is self-filtered calibration to damping factor `lambda`?
 
 | Lambda | FPR | Recall | F1 |
 |---:|---:|---:|---:|
@@ -23,11 +54,17 @@ This table checks whether the Section 6 trend survives at native 1s sampling. Th
 | 0.0500 | 0.0504 | 0.6122 | 0.6120 |
 | 0.1000 | 0.0481 | 0.4310 | 0.4785 |
 
-The FPR tradeoff is smooth and monotonic as lambda increases. F1 peaks at `lambda = 0.02` and then declines as larger damping allows more attack signal into the buffer and recall falls. The main paper keeps `lambda = 0.01` as a conservative default fixed before this sweep, while this supplement shows the method is robust to this choice.
+Interpretation:
+FPR decreases as `lambda` increases, while recall decreases after moderate damping; the best observed F1 is at `lambda = 0.02`. The paper default `lambda = 0.01` remains a conservative, stable operating point.
 
-## Gamma Sensitivity for operator_feedback (ACI learning rate)
+Raw files:
+- `results/lambda_sensitivity/lambda_sensitivity.csv`
+- `results/lambda_sensitivity/lambda_sensitivity.json`
+- `results/lambda_sensitivity/metadata.json`
 
-In this section, `gamma` is the ACI learning rate for operator-feedback threshold updates.
+## Gamma Sensitivity (Operator-Feedback ACI Learning Rate)
+Question:
+How sensitive is operator-feedback ACI to step size `gamma`?
 
 | Gamma | FPR | Recall | F1 |
 |---:|---:|---:|---:|
@@ -38,11 +75,17 @@ In this section, `gamma` is the ACI learning rate for operator-feedback threshol
 | 0.0500 | 0.0357 | 0.7347 | 0.7312 |
 | 0.1000 | 0.0375 | 0.7318 | 0.7243 |
 
-Across this sweep, recall stays relatively stable while larger `gamma` increases FPR and gradually lowers F1. The best observed F1 is at `gamma = 0.001`, and the paper-style default `gamma = 0.01` remains a competitive operating point with balanced adaptation and alarm control.
+Interpretation:
+Across the tested range, recall stays comparatively stable while larger `gamma` increases FPR and gradually lowers F1. Best observed F1 occurs at `gamma = 0.001`; the paper default `gamma = 0.01` remains close to the practical tradeoff region.
 
-Raw outputs are stored under `results/gamma_sensitivity/`.
+Raw files:
+- `results/gamma_sensitivity/gamma_sensitivity.csv`
+- `results/gamma_sensitivity/gamma_sensitivity.json`
+- `results/gamma_sensitivity/metadata.json`
 
 ## Number of Layers Robustness
+Question:
+Do conclusions persist when model depth changes from 1 to 3 layers (hidden size fixed)?
 
 | Layers | Hidden | Calibration | FPR | Recall | F1 |
 |---:|---:|---|---:|---:|---:|
@@ -53,25 +96,28 @@ Raw outputs are stored under `results/gamma_sensitivity/`.
 | 3 | 64 | static | 0.7418 | 0.9610 | 0.2503 |
 | 3 | 64 | self_filtered | 0.1539 | 0.7961 | 0.5339 |
 
-Across 1 to 3 layers at hidden size 64, the deployment conclusion is unchanged. `self_filtered` consistently reduces FPR by roughly `0.57` to `0.59` absolute compared to `static`, while keeping F1 near `0.53` to `0.54`. Static remains high-recall but high-FPR across all depths, showing the calibration method effect is robust to this model-depth change.
+Interpretation:
+Across all tested depths, `self_filtered` reduces FPR by roughly 0.57 to 0.59 absolute versus `static`, while keeping F1 near 0.53 to 0.54. This supports robustness of the calibration conclusion to moderate model-depth variation.
 
-Raw outputs are stored under `results/layers_robustness/`.
+Raw files:
+- `results/layers_robustness/layers_robustness.csv`
+- `results/layers_robustness/layers_robustness.md`
 
-## Degraded Feedback
+## Degraded Operator Feedback
+Question:
+How robust is operator-feedback ACI when feedback is delayed and label quality degrades?
 
-This section is a robustness extension of the paper setup in Section 6.2 for `operator_feedback` ACI. It uses the same calibration operator and updates, then relaxes the idealized operator assumption by injecting feedback errors and longer delays.
-
-Parameters matched to Section 6.2:
+Parameters matched to paper setup:
 - target false alarm rate `alpha = 0.01`
-- buffer size `W = 3600` observations
+- buffer size `W = 3600`
 - ACI step size `gamma = 0.01`
-- score stream `score_pred` (L2) on the SWaT GRU run artifacts
+- score stream `score_pred` (L2)
 
-Robustness axes varied here:
-- feedback delay `d` in `{60, 180, 600}` steps
-- feedback label flip probability `misclassify_rate` in `{0.0, 0.1, 0.2, 0.5}`
+Stress axes:
+- delay `d in {60, 180, 600}`
+- feedback label flip probability `misclassify_rate in {0.0, 0.1, 0.2, 0.5}`
 
-Static reference is `FPR = 0.7406`, `F1 = 0.2514`.
+Static reference: `FPR = 0.7406`, `F1 = 0.2514`.
 
 | Misclassify Rate | Delay 60 (FPR/F1) | Delay 180 (FPR/F1) | Delay 600 (FPR/F1) |
 |---:|---:|---:|---:|
@@ -80,4 +126,12 @@ Static reference is `FPR = 0.7406`, `F1 = 0.2514`.
 | 20.0% | 0.0205 / 0.4719 | 0.0195 / 0.4773 | 0.0220 / 0.4298 |
 | 50.0% | 0.0310 / 0.4013 | 0.0221 / 0.4209 | 0.0228 / 0.3843 |
 
-FPR is stable across the entire grid, staying between `0.019` and `0.031` even when half of operator feedback labels are incorrect. F1 degrades gracefully with misclassification rate and is less sensitive to delay than to feedback quality. This converts the idealized-operator limitation into a quantified boundary, and even at 20% misclassification the method remains above static with `F1 = 0.47` versus `0.25` in low FPR regime.
+Interpretation:
+FPR remains low across the grid (0.019 to 0.031), while F1 degrades gradually with increasing feedback corruption. At 20% feedback misclassification, F1 remains above static across delays, indicating graceful degradation rather than collapse.
+
+Raw files:
+- `results/degraded_feedback/degraded_feedback_grid.csv`
+
+## Overall Robustness Takeaway
+These supplementary results support the same deployment claim as the main paper:
+static calibration is brittle under realistic shift, while adaptive calibration provides materially better false-alarm control with usable detection performance across practical perturbations.
