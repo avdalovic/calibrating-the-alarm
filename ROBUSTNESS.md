@@ -25,13 +25,20 @@ This table checks whether the Section 6 trend survives at native 1s sampling. Th
 
 The FPR tradeoff is smooth and monotonic as lambda increases. F1 peaks at `lambda = 0.02` and then declines as larger damping allows more attack signal into the buffer and recall falls. The main paper keeps `lambda = 0.01` as a conservative default fixed before this sweep, while this supplement shows the method is robust to this choice.
 
-## Buffer Size Extended
+## Number of Layers Robustness
 
-| Buffer Size W | Calibration | FPR | F1 |
-|---:|---|---:|---:|
-| pending | pending | pending | pending |
+| Layers | Hidden | Calibration | FPR | Recall | F1 |
+|---:|---:|---|---:|---:|---:|
+| 1 | 64 | static | 0.7300 | 0.9438 | 0.2493 |
+| 1 | 64 | self_filtered | 0.1395 | 0.7721 | 0.5423 |
+| 2 | 64 | static | 0.7191 | 0.9486 | 0.2533 |
+| 2 | 64 | self_filtered | 0.1422 | 0.7641 | 0.5344 |
+| 3 | 64 | static | 0.7418 | 0.9610 | 0.2503 |
+| 3 | 64 | self_filtered | 0.1539 | 0.7961 | 0.5339 |
 
-This section will extend the window-size analysis beyond the main setting. It will quantify the operating tradeoff between faster adaptation and threshold stability. Raw outputs will be stored under `results/buffer_size_extended/`.
+Across 1 to 3 layers at hidden size 64, the deployment conclusion is unchanged. `self_filtered` consistently reduces FPR by roughly `0.57` to `0.59` absolute compared to `static`, while keeping F1 near `0.53` to `0.54`. Static remains high-recall but high-FPR across all depths, showing the calibration method effect is robust to this model-depth change.
+
+Raw outputs are stored under `results/layers_robustness/`.
 
 ## Degraded Feedback
 
