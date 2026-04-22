@@ -25,6 +25,23 @@ This table checks whether the Section 6 trend survives at native 1s sampling. Th
 
 The FPR tradeoff is smooth and monotonic as lambda increases. F1 peaks at `lambda = 0.02` and then declines as larger damping allows more attack signal into the buffer and recall falls. The main paper keeps `lambda = 0.01` as a conservative default fixed before this sweep, while this supplement shows the method is robust to this choice.
 
+## Gamma Sensitivity for operator_feedback (ACI learning rate)
+
+In this section, `gamma` is the ACI learning rate for operator-feedback threshold updates.
+
+| Gamma | FPR | Recall | F1 |
+|---:|---:|---:|---:|
+| 0.0010 | 0.0204 | 0.7141 | 0.7633 |
+| 0.0050 | 0.0273 | 0.7198 | 0.7458 |
+| 0.0100 | 0.0298 | 0.7308 | 0.7456 |
+| 0.0200 | 0.0310 | 0.7205 | 0.7355 |
+| 0.0500 | 0.0357 | 0.7347 | 0.7312 |
+| 0.1000 | 0.0375 | 0.7318 | 0.7243 |
+
+Across this sweep, recall stays relatively stable while larger `gamma` increases FPR and gradually lowers F1. The best observed F1 is at `gamma = 0.001`, and the paper-style default `gamma = 0.01` remains a competitive operating point with balanced adaptation and alarm control.
+
+Raw outputs are stored under `results/gamma_sensitivity/`.
+
 ## Number of Layers Robustness
 
 | Layers | Hidden | Calibration | FPR | Recall | F1 |

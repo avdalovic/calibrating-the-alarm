@@ -1,0 +1,22 @@
+{
+  "ablation": "aci_operator_feedback_gamma_sensitivity",
+  "description": "Gamma is the ACI learning rate for operator-feedback threshold updates.",
+  "source_script": "experiments/ablation_gamma.py",
+  "gamma_values": [
+    0.001,
+    0.005,
+    0.01,
+    0.02,
+    0.05,
+    0.1
+  ],
+  "fixed_parameters": {
+    "alpha": 0.01,
+    "window": 3600,
+    "damp_alpha": 0.01,
+    "delay": 60,
+    "review_prob": 1.0,
+    "update_mode": "damped",
+    "score_key": "score_pred"
+  }
+}
