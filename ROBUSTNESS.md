@@ -18,8 +18,9 @@ Unless explicitly stated otherwise:
 - Adaptive targets: `alpha = 0.01`, buffer `W = 3600`.
 
 Scientific limits:
-- Results are point estimates from fixed split/run artifacts.
-- This supplement does not report multi-seed uncertainty intervals.
+- The sampling, lambda, gamma, layers, and degraded-feedback sweeps are point estimates from fixed split/run artifacts.
+- Those sweep sections do not report multi-seed uncertainty intervals.
+- The attack-persistence analysis below aggregates across the ten paper model seeds.
 - Interpretation is constrained to robustness trends, not universal guarantees.
 
 ## Sampling Rate Robustness
@@ -131,6 +132,18 @@ FPR remains low across the grid (0.019 to 0.031), while F1 degrades gradually wi
 
 Raw files:
 - `results/degraded_feedback/degraded_feedback_grid.csv`
+
+## Attack Persistence Under Rolling Calibration
+Question:
+Can native attack persistence move the self-filtered threshold enough to suppress detection later in the same attack?
+
+Across the 32 native SWaT attack episodes, mean second-half minus first-half recall is +0.013. Among attacks lasting at least 10 minutes, none loses more than 0.10 recall from the first half to the second half. Some sustained episodes do move the threshold substantially, so damping should be interpreted as limiting the influence of alarm-level scores rather than preventing attack observations from affecting the rolling buffer.
+
+In the most heavily contaminated attack-labeled interval, attack observations occupy up to 96.5% of the W=3600 window and the threshold reaches 4.21 times its pre-attack reference, while overall recall remains 0.986 and second-half recall is 1.000.
+
+These results address the non-adaptive SWaT attacks represented in the paper and do not establish robustness to threshold-aware poisoning.
+
+Detailed reader-facing outputs are in `results/attack_persistence/README.md`.
 
 ## Overall Robustness Takeaway
 These supplementary results support the same deployment claim as the main paper:
